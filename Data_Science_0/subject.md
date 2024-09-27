@@ -53,4 +53,10 @@ Funciones permitidas: pgadmin, Postico, dbeaver o lo que quieras para ver la bas
 
 • Estamos a finales de febrero de 2022, deberías poder crear tablas con datos extraídos de un CSV.
 • Ahora, además, recupera todos los CSV de la carpeta 'cliente' automáticamente y nombra las tablas según el nombre del CSV pero sin la extensión del archivo, por ejemplo: "data_2022_oct"
-A continuación, se muestra un ejemplo de la estructura de directorio esperada
+
+
+### Capítulo VII: 
+#### Exercise 04
+
+• Debe crear la tabla "items" con las mismas columnas que en el archivo "item.csv" • Debe crear al menos 3 tipos de datos en la tabla
+A continuación se muestra un ejemplo de la estructura de directorio esperada:

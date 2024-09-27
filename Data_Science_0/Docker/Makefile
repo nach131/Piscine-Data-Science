@@ -5,6 +5,7 @@ DB_DIR = ${DATA_DIR}/db
 # Macros
 DOCKER_COMPOSE = docker compose
 DC_RUN_DB = run --rm db sh -c
+DC_RUN_APP = run --rm python sh -c
 
 all: build
 

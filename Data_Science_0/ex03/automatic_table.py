@@ -9,23 +9,22 @@ db_user = os.getenv('DB_USER')
 db_pass = os.getenv('DB_PASS')
 db_name = os.getenv('DB_NAME')
 
-folder = '../customer'
-
-files = [
-    'data_2022_dec.csv',
-    'data_2022_nov.csv',
-    'data_2022_oct.csv',
-    'data_2023_jan.csv'
-]
+folder = './customer'
 
 connection = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 engine = create_engine(connection)
 
-for filename in tqdm(files, desc="importing CSV file", unit="file"):
+# Listar todos los archivos CSV
+files = [f for f in os.listdir(folder) if f.endswith('csv')]
+
+# print(files)
+
+for filename in tqdm(files, desc="Importing CSV file", unit="file"):
     table_name = os.path.splitext(filename)[0]
     file_path = os.path.join(folder, filename)
 
     df = pd.read_csv(file_path)
+
     if not df.empty:
         df.iloc[:, 0] = pd.to_datetime(
             df.iloc[:, 0], format="%Y-%m-%d %H:%M:%S %Z", utc=True, errors='coerce')
