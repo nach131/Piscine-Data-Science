@@ -9,7 +9,7 @@ db_user = os.getenv('DB_USER')
 db_pass = os.getenv('DB_PASS')
 db_name = os.getenv('DB_NAME')
 
-folder = '../customer'
+folder = '../subject/customer/'
 
 files = [
     'data_2022_dec.csv',

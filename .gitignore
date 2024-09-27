@@ -1,5 +1,9 @@
-Data_Science_0/Docker/.env
-Data_Science_0/Docker/venv
-Data_Science_0/Docker/data/db
 Data_Science_0/subject
 Data_Science_0/subject.zip
+
+Docker/.env
+Docker/venv
+
+Docker/data/db/*
+Docker/data/subject/*
+Docker/app/*

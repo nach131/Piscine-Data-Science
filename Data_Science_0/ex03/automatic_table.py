@@ -9,7 +9,7 @@ db_user = os.getenv('DB_USER')
 db_pass = os.getenv('DB_PASS')
 db_name = os.getenv('DB_NAME')
 
-folder = './customer'
+folder = '../subject/customer/'
 
 connection = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 engine = create_engine(connection)
@@ -40,3 +40,6 @@ for filename in tqdm(files, desc="Importing CSV file", unit="file"):
           table_name}")
 
 print(f"The files have been imported: \n{files}")
+
+
+# [14:43<00:00, 220.76s/file]
