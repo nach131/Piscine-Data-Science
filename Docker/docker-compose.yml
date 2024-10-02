@@ -2,7 +2,7 @@ services:
   python:
     container_name: python
     build:
-      context: .
+      context: ./req/python
     networks:
       - tokemo
     volumes:
@@ -28,6 +28,26 @@ services:
       - "5432:5432"
     command: >
       postgres -c max_wal_size=2GB -c checkpoint_completion_target=0.9
+
+  jupyter:
+    container_name: jupyter
+    # image: jupyter/minimal-notebook:latest
+    build:
+      context: ./req/jupyter
+    networks:
+      - tokemo
+    volumes:
+      - ./app:/home/jovyan/work
+      # - data-subject:/home/jovyan/work/subject
+    environment:
+      - JUPYTER_ENABLE_LAB=yes  # Habilita Jupyter Lab (opcional)
+      - NB_UID=1000  # Asigna un UID para evitar problemas de permisos
+      - NB_GID=100
+    ports:
+      - "8888:8888"
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+    depends_on:
+      - db
 
   adminer:
     container_name: adminer
