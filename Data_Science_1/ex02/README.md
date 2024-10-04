@@ -52,3 +52,11 @@ La consulta:
 2. Calculará la diferencia de tiempo (`EXTRACT(EPOCH FROM (duplicates.next_event_time - duplicates.event_time))`), que en este caso será `1` segundo.
 3. Como la diferencia es igual o menor a `1` segundo, se eliminará uno de estos eventos duplicados.
 
+
+
+```
+event_time               | event_type          | product_id 
+-------------------------|---------------------|-------------
+2022-12-09 00:05:08      | remove_from_cart    | 5859482
+2022-12-09 00:05:08      | remove_from_cart    | 5859482
+```

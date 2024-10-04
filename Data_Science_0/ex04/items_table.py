@@ -18,15 +18,30 @@ files = [
 connection = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 engine = create_engine(connection)
 
-for filename in tqdm(files, desc="importing CSV file", unit="file"):
+
+for filename in files:
     table_name = os.path.splitext(filename)[0]
     file_path = os.path.join(folder, filename)
 
-    df = pd.read_csv(file_path)
+    # Leer el archivo CSV por chunks
+    chunk_size = 10000
+    count = 1
 
-    df.to_sql(table_name, engine, if_exists='replace', index=False)
+    print(f"\nImported: {filename}")
 
-    print(f"The data has been successfully imported into the table {
-          table_name}")
+    try:
+        for chunk in pd.read_csv(file_path, chunksize=chunk_size):
 
-print(f"The files have been imported: \n{files}")
+            # solo los registro que tinen datos
+            filtered = chunk.dropna(
+                subset=['category_id', 'category_code', 'brand'], how='all')
+
+            filtered.to_sql(table_name, engine,
+                            if_exists='append', index=False)
+            count += 1
+            print(f"Chunck: {count}", end='\r', flush=True)
+
+    except pd.errors.EmptyDataError:
+        print(f"Warning: The file {filename} is empty.")
+    except Exception as e:
+        print(f"Error processing file {filename}: {e}")

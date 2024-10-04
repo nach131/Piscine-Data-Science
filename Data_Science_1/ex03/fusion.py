@@ -38,12 +38,10 @@ try:
         conn.execute(text(query))
 
     elapsed_time = time.time() - start_time
-    print(f"Eliminación de duplicados completada en {
-          elapsed_time:.2f} segundos.")
+    print(f"Fusion completada en {elapsed_time:.2f} segundos.")
 
 
 except Exception as e:
     print(f"Error  '{table}': {e}")
 
-
-# Eliminación de duplicados completada en 147.88 segundos.  2,4 minutos
+# Fusion completada en 127.22 segundos.

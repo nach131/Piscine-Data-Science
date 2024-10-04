@@ -31,7 +31,10 @@ query = f"""
         AND duplicates.next_event_time IS NOT NULL  -- Asegurar que haya un siguiente evento
         AND duplicates.event_type = {table}.event_type
         AND duplicates.product_id = {table}.product_id
-        AND EXTRACT(EPOCH FROM (duplicates.next_event_time - duplicates.event_time)) <= 1;
+        AND (
+         EXTRACT(EPOCH FROM (duplicates.next_event_time - duplicates.event_time)) <= 1
+         OR EXTRACT(EPOCH FROM (duplicates.next_event_time - duplicates.event_time)) = 0
+    );
 """
 
 try:
@@ -51,4 +54,4 @@ except Exception as e:
     print(f"Error  '{table}': {e}")
 
 
-# Eliminación de duplicados completada en 147.88 segundos.  2,4 minutos
+# Eliminación de duplicados completada en 246.98 segundos.

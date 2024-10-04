@@ -30,7 +30,7 @@ union = f"CREATE TABLE {final_table} AS \n"
 union += "\nUNION ALL\n".join(
     [f"SELECT * FROM {table}" for table in table_names])
 
-print(union)
+# print(union)
 
 # ejecutar la consulta de union
 try:
@@ -52,3 +52,5 @@ except Exception as e:
 # SELECT * FROM data_2022_nov
 # UNION ALL
 # SELECT * FROM data_2022_oct
+
+# [-- TIME --] 46.52 sec

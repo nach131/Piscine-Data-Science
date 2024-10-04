@@ -1,6 +1,7 @@
 # Variables
 DATA_DIR = data
 DB_DIR = ${DATA_DIR}/db
+SUB_DIR = ${DATA_DIR}/subject
 
 # Macros
 DOCKER_COMPOSE = docker compose
@@ -12,7 +13,7 @@ all: build
 # Target to create directories
 create-dirs:
 	@echo "Creating directories..." 
-	@mkdir -p $(DB_DIR)
+	@mkdir -p $(DB_DIR) $(SUB_DIR)
 
 # Target to download official Docker images
 pull-images:
@@ -44,7 +45,7 @@ clean: down
 
 fclean: clean
 	@echo "Deleting all Docker resources..."
-	@rm -rf $(DB_DIR)
+	@rm -rf $(DB_DIR) $(SUB_DIR)
 # @docker image rm src-app
 	@docker volume rm docker_db-data
 	@docker image rm docker-python

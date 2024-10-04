@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from tqdm import tqdm
 from sqlalchemy import create_engine
 
 db_host = os.getenv('DB_HOST')
@@ -17,29 +16,36 @@ engine = create_engine(connection)
 # Listar todos los archivos CSV
 files = [f for f in os.listdir(folder) if f.endswith('csv')]
 
-# print(files)
-
-for filename in tqdm(files, desc="Importing CSV file", unit="file"):
+for filename in files:
     table_name = os.path.splitext(filename)[0]
     file_path = os.path.join(folder, filename)
 
-    df = pd.read_csv(file_path)
+    # Leer el archivo CSV por chunks
+    chunk_size = 10000
+    count = 1
 
-    if not df.empty:
-        df.iloc[:, 0] = pd.to_datetime(
-            df.iloc[:, 0], format="%Y-%m-%d %H:%M:%S %Z", utc=True, errors='coerce')
+    print(f"\nImported: {filename}")
 
-        # Verificar si la conversión fue exitosa
-        if df.iloc[:, 0].isnull().any():
-            print(f"Warning: Some dates in the first column of {
-                  filename} could not be converted. They will be NaT.")
+    try:
+        for chunk in pd.read_csv(file_path, chunksize=chunk_size):
 
-    df.to_sql(table_name, engine, if_exists='replace', index=False)
+            if not chunk.empty:
+                chunk.iloc[:, 0] = pd.to_datetime(
+                    chunk.iloc[:, 0], format="%Y-%m-%d %H:%M:%S %Z", utc=True, errors='coerce')
 
-    print(f"The data has been successfully imported into the table {
-          table_name}")
+                # Verificar si la conversión fue exitosa
+                if chunk.iloc[:, 0].isnull().any():
+                    print(f"Warning: Some dates in the first column of {
+                        filename} could not be converted. They will be NaT.")
 
-print(f"The files have been imported: \n{files}")
+                chunk.to_sql(table_name, engine,
+                             if_exists='append', index=False)
+            count += 1
+            print(f"Chunck: {count}", end='\r', flush=True)
 
+    except pd.errors.EmptyDataError:
+        print(f"Warning: The file {filename} is empty.")
+    except Exception as e:
+        print(f"Error processing file {filename}: {e}")
 
-# [14:43<00:00, 220.76s/file]
+# print(f"The files have been imported: \n{files}")
