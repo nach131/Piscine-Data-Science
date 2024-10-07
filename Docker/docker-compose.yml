@@ -38,7 +38,7 @@ services:
       - tokemo
     volumes:
       - ./app:/home/jovyan/work
-      # - data-subject:/home/jovyan/work/subject
+      - data-subject:/home/jovyan/work/subject
     environment:
       - JUPYTER_ENABLE_LAB=yes  # Habilita Jupyter Lab (opcional)
       - NB_UID=1000  # Asigna un UID para evitar problemas de permisos
