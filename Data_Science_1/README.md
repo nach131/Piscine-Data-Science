@@ -2,7 +2,9 @@
 
 
 # Contar
+```sql
 SELECT COUNT(*) FROM data_2022_dec;
+```
 
 | | |
 | -- | -- |
@@ -15,7 +17,6 @@ SELECT COUNT(*) FROM data_2022_dec;
 
 DESPUES DE BORRAR DUPLICADOS
 | customers | 11.363.281 |
-
 
 item 109579
 
@@ -32,8 +33,9 @@ SELECT
 ```
 
 # Consultar fila con unda condicion
+```sql
 SELECT COUNT(*) FROM nombre_de_la_tabla WHERE columna = 'valor';
-
+```
 
 ## UNION
 ```sql

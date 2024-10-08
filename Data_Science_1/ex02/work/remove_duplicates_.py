@@ -15,19 +15,26 @@ table = "customers"
 
 query = f"""
     WITH duplicates AS (
-    SELECT ctid
-    FROM (
         SELECT
-        ctid,
-        ROW_NUMBER() OVER (PARTITION BY user_id, event_time, user_session, product_id, price, event_type ORDER BY ctid) AS row_num
+            ctid,  -- ctid se usa para identificar filas únicas en PostgreSQL
+            event_time,
+            event_type,
+            product_id,
+            LEAD(event_time) OVER (PARTITION BY event_type, product_id ORDER BY event_time) AS next_event_time
         FROM
-        {table}
-    ) subquery
-    WHERE row_num > 1
+            {table}
     )
     DELETE FROM {table}
     USING duplicates
-    WHERE {table}.ctid = duplicates.ctid;
+    WHERE
+        {table}.ctid = duplicates.ctid
+        AND duplicates.next_event_time IS NOT NULL  -- Asegurar que haya un siguiente evento
+        AND duplicates.event_type = {table}.event_type
+        AND duplicates.product_id = {table}.product_id
+        AND (
+         EXTRACT(EPOCH FROM (duplicates.next_event_time - duplicates.event_time)) <= 1
+         OR EXTRACT(EPOCH FROM (duplicates.next_event_time - duplicates.event_time)) = 0
+    );
 """
 
 try:
@@ -47,7 +54,4 @@ except Exception as e:
     print(f"Error  '{table}': {e}")
 
 
-# DELETE 643708
-# registros 11627698
-
-# Query returned successfully in 3 min 7 secs.
+# Eliminación de duplicados completada en 246.98 segundos.
