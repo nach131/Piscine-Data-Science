@@ -4,22 +4,22 @@ services:
     build:
       context: ./req/python
     networks:
-      - tokemo
+      - data-tokemo
     volumes:
-      - ./app:/app
+      - data-app:/app
       - data-subject:/app/subject
     env_file:
       - .env
     depends_on:
-      - db
+      - db-data
 
-  db:
-    container_name: db
+  db-data:
+    container_name: db-data
     image: postgres:13-alpine
     volumes:
       - data-db:/var/lib/postgresql/data
     networks:
-      - tokemo
+      - data-tokemo
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
@@ -35,9 +35,9 @@ services:
     build:
       context: ./req/jupyter
     networks:
-      - tokemo
+      - data-tokemo
     volumes:
-      - ./app:/home/jovyan/work
+      - data-app:/home/jovyan/work
       - data-subject:/home/jovyan/work/subject
     environment:
       - JUPYTER_ENABLE_LAB=yes  # Habilita Jupyter Lab (opcional)
@@ -47,22 +47,29 @@ services:
       - "8888:8888"
     command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
     depends_on:
-      - db
+      - db-data
 
-  adminer:
-    container_name: adminer
+  adminer-data:
+    container_name: adminer-data
     image: adminer
     restart: always
     networks:
-      - tokemo
+      - data-tokemo
     ports:
       - 8080:8080
 
 networks:
-  tokemo:
+  data-tokemo:
     driver: bridge
 
 volumes:
+  data-app:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./app
+      o: bind
+
   data-db:
     driver: local
     driver_opts:
